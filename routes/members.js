@@ -32,7 +32,7 @@ function filterByQuery(list, query) {
 // - 驗證失敗 → { valid: false, error: '缺 name 或 level' }
 // - 任務三的 POST / 會使用到這個函式
 function validateBody(body) {
-  if (!body || !body.name || !body.level) {
+  if (!body || typeof body !== "object" || !body.name || !body.level) {
     return { valid: false, error: "缺 name 或 level" };
   }
   return { valid: true };
@@ -83,7 +83,7 @@ router.post("/", (req, res) => {
   if (!validation.valid) {
     return res.status(400).json({ error: validation.error });
   }
-  const newMember = { id: nextId++, ...req.body };
+  const newMember = { ...req.body, id: nextId++ };
   members.push(newMember);
   res.status(201).json(newMember);
 });
